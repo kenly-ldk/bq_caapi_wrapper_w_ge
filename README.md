@@ -1,4 +1,4 @@
-# Generic Setup Instructions for GE-BigQuery Integration
+# Setup Instructions for Gemini Enterprise -> BigQuery Data Agents Integration
 
 
 ## Overview
