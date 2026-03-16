@@ -111,6 +111,12 @@ gcloud auth application-default login
 
 Create the BigQuery Data Agent. This agent will handle the actual data retrieval from BigQuery.
 
+### Alternative: Manual Creation via GUI
+This step can also be done manually using the Google Cloud Console for more configuration options. For detailed instructions, follow the official documentation: [Create Data Agents](https://docs.cloud.google.com/bigquery/docs/create-data-agents).
+
+### CLI Method
+Run the provided script to create the agent with the configuration from your `.env` file:
+
 ```bash
 python scripts/admin_tools.py
 ```
