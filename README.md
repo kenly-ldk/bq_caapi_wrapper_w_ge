@@ -67,30 +67,31 @@ For a minimum privilege setup, ensure the user or service account executing thes
     ```
     *(Note: If using `uv`, you can run `uv pip install` with the same packages instead).*
 
-5.  Create a `.env` file in the root directory:
+5.  Create and populate a `.env` file in the root directory:
     ```properties
     # Google Cloud Configuration
     GOOGLE_CLOUD_PROJECT_ID=your-project-id # The ID of your Google Cloud project
     GOOGLE_CLOUD_PROJECT_NUMBER=your-project-number # The number of your Google Cloud project
     GOOGLE_CLOUD_LOCATION=global # The location for the agent (default: global)
+    GOOGLE_CLOUD_REGION=us-central1 # The region for deployment (default: us-central1)
 
     # Vertex AI Search & Conversation (Discovery Engine)
-    GEMINI_APP_ID=your-gemini-enterprise-engine-id # The ID of the Gemini Enterprise engine
+    GEMINI_APP_ID=your-gemini-enterprise-engine-id # The ID of the Gemini Enterprise engine (Used in Step 7)
 
     # BigQuery Analytics Agent (ADK)
-    BIGQUERY_DATA_AGENT_ID=your-agent-id # An arbitrary ID for the data agent (e.g., my_data_agent)
+    BIGQUERY_DATA_AGENT_ID=your-agent-id # An arbitrary ID for the data agent (e.g., my_data_agent) (Used in Step 3)
     MODEL_NAME=gemini-2.5-flash # The model to use (default: gemini-2.5-flash)
 
     # BigQuery Data
     # Comma-separated list of full table IDs (project.dataset.table or dataset.table)
-    BIGQUERY_TABLE_IDS=project.dataset.table1,project.dataset.table2 # Tables the agent can query
+    BIGQUERY_TABLE_IDS=project.dataset.table1,project.dataset.table2 # Tables the agent can query (Used in Step 3)
 
     # OAuth 2.0 Credentials (Required for identity passthrough)
-    OAUTH_CLIENT_ID=your-oauth-client-id # OAuth 2.0 Client ID
-    OAUTH_CLIENT_SECRET=your-oauth-client-secret # OAuth 2.0 Client Secret
+    OAUTH_CLIENT_ID=your-oauth-client-id # OAuth 2.0 Client ID (Used in Steps 4, 6)
+    OAUTH_CLIENT_SECRET=your-oauth-client-secret # OAuth 2.0 Client Secret (Used in Steps 4, 6)
 
     # Authorization Resource Name (Arbitrary name for the auth bridge)
-    AUTH_RESOURCE_ID=your-auth-resource-id # An arbitrary name for the authorization resource
+    AUTH_RESOURCE_ID=your-auth-resource-id # An arbitrary name for the authorization resource (Used in Steps 6, 7)
 
     # Reasoning Engine (Optional, used if you want to reuse an existing deployment)
     # ORDERS_REASONING_ENGINE_ID=projects/your-project/locations/us-central1/reasoningEngines/your-engine-id
@@ -116,13 +117,18 @@ python scripts/admin_tools.py
 
 **IMPORTANT**: Ensure your `.env` file has `BIGQUERY_TABLE_IDS` set before running this script.
 
-## Step 4: Deploy the Backend Agent
+## Step 4: Deploy the ADK Agent
 
-Run the deployment script to create the Reasoning Engine on Vertex AI.
+Deploy the ADK Agent (Reasoning Engine) to Vertex AI Agent Engine.
+
+The code in `app/bq_caapi_wrapper_agent/agent.py` defines this agent using the **Google ADK Framework**. Its purpose is to:
+1.  **Bridge Authentication**: It uses a callback (`bridge_oauth_token`) to pass the OAuth access token from Gemini Enterprise to the BigQuery Data Agent toolset.
+2.  **Wraps Conversational Analytics API**: It uses the `DataAgentToolset` from the ADK to interact with the BigQuery Data Agent (created in Step 3), allowing it to query BigQuery securely.
+
+Run the deployment script:
 
 ```bash
-# Ensure you have initialized Vertex AI and created the agent.py file
-# (This step assumes the app/ directory is pre-configured or you run the deployment logic directly)
+# Please review app/bq_caapi_wrapper_agent/agent.py, no need to change anything if you have populated the .env file correctly
 
 # Run the deployment script:
 bash scripts/deploy_agents.sh
